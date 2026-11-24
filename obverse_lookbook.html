@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full select-none">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OBVERSE — Techwear Lookbook & Catalogue</title>
+  
+  <!-- Inter Tight Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,200..700;1,200..700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Inter Tight"', 'Helvetica', 'Arial', 'sans-serif'],
+          },
+          colors: {
+            obverse: {
+              bg: '#e9e9e6',
+              ink: '#0e0e0f',
+              mute: '#6b6b70',
+              line: 'rgba(14,14,15,0.12)',
+              blue: '#1a4bff',
+              tag: 'rgba(255,255,255,0.72)',
+              card: '#f4f4f1'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --bg: #e9e9e6;
+      --ink: #0e0e0f;
+      --mute: #6b6b70;
+      --line: rgba(14, 14, 15, 0.12);
+      --blue: #1a4bff;
+      --tag: rgba(255, 255, 255, 0.72);
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter Tight', sans-serif;
+      overflow: hidden;
+      width: 100vw;
+      height: 100dvh;
+    }
+
+    /* SVG Grain Overlay */
+    .grain-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      opacity: 0.28;
+      pointer-events: none;
+      z-index: 999;
+      mix-blend-mode: overlay;
+    }
+
+    /* Custom Scrollbar for Drawers */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(14, 14, 15, 0.2);
+      border-radius: 2px;
+    }
+
+    /* Dynamic Wordmark Scaling */
+    .bg-wordmark {
+      font-size: clamp(8rem, 26vw, 32rem);
+      line-height: 0.8;
+      letter-spacing: -0.06em;
+      font-weight: 800;
+      color: rgba(14, 14, 15, 0.05);
+      white-space: nowrap;
+      user-select: none;
+      transition: opacity 0.6s var(--ease-out-expo);
+    }
+
+    /* Custom Cursor Styles */
+    @media (pointer: fine) {
+      body, a, button, input {
+        cursor: none !important;
+      }
+    }
+
+    #custom-cursor {
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 9999;
+      transform: translate3d(-50%, -50%, 0);
+      transition: width 0.3s var(--ease-out-expo), height 0.3s var(--ease-out-expo), background-color 0.3s, border-color 0.3s;
+      will-change: transform;
+    }
+
+    /* Clip-Path Transitions for Slider Stage */
+    .slide-stage {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .slide-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      will-change: clip-path;
+    }
+
+    /* Hotspot Pulse Ring */
+    .hotspot-ring {
+      animation: pulse-ring 2.4s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+
+    @keyframes pulse-ring {
+      0% {
+        transform: scale(0.95);
+        opacity: 0.8;
+      }
+      50% {
+        transform: scale(2.2);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(0.95);
+        opacity: 0;
+      }
+    }
+
+    /* Glassmorphic Hotspot Tag */
+    .glass-card {
+      background: var(--tag);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Focus Mode Toggle Classes */
+    body.fs .ui-chrome {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+    }
+    body.fs .ui-controls {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+    }
+    body.fs .hotspot-container {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .ui-chrome, .ui-controls, .hotspot-container {
+      transition: opacity 0.4s var(--ease-out-expo), transform 0.4s var(--ease-out-expo);
+    }
+
+    /* Magnifier Lens */
+    #magnifier-lens {
+      position: fixed;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35), inset 0 0 15px rgba(0,0,0,0.2);
+      pointer-events: none;
+      z-index: 900;
+      display: none;
+      overflow: hidden;
+      transform: translate3d(-50%, -50%, 0);
+      will-change: transform, background-position;
+      background-repeat: no-repeat;
+    }
+
+    /* Line Mask Typography Animation */
+    .mask-text-line {
+      overflow: hidden;
+      display: block;
+    }
+    .mask-text-inner {
+      display: block;
+      transition: transform 0.65s var(--ease-out-expo), opacity 0.65s var(--ease-out-expo);
+      will-change: transform;
+    }
+    .mask-text-inner.is-sliding {
+      transform: translateY(105%);
+      opacity: 0;
+    }
+
+    /* Seam Line Label during slide transition */
+    #seam-divider {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--ink);
+      z-index: 50;
+      pointer-events: none;
+      opacity: 0;
+      will-change: transform;
+    }
+
+    /* Accordion styles */
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s var(--ease-out-expo), opacity 0.3s ease;
+      opacity: 0;
+    }
+    .accordion-item.active .accordion-content {
+      max-height: 180px;
+      opacity: 1;
+    }
+    .accordion-item.active .accordion-icon {
+      transform: rotate(180deg);
+    }
+
+    /* Fly to Bag particle */
+    .fly-particle {
+      position: fixed;
+      z-index: 9999;
+      pointer-events: none;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      border: 2px solid white;
+    }
+  </style>
+</head>
+<body class="h-full w-full relative bg-obverse-bg text-obverse-ink antialiased">
+
+  <!-- SVG Grain Filter -->
+  <svg class="grain-overlay">
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <rect width="100%" height="100%" filter="url(#grain)"/>
+  </svg>
+
+  <!-- INTRO LOADER CURTAIN -->
+  <div id="intro-curtain" class="fixed inset-0 z-[10000] bg-obverse-ink text-white flex flex-col justify-between p-8 md:p-12 transition-transform duration-1000 ease-[cubic-bezier(0.85,0,0.15,1)]">
+    <div class="flex justify-between items-start font-mono text-xs tracking-widest text-neutral-400">
+      <span>OBVERSE SYSTEM v2.6</span>
+      <span>SPRING / AUTUMN ARCHIVE</span>
+    </div>
+
+    <div class="space-y-4">
+      <h1 class="text-6xl md:text-9xl font-semibold tracking-tighter uppercase leading-none">
+        OBVERSE
+      </h1>
+      <p class="text-neutral-400 text-sm md:text-base max-w-md font-light">
+        Interactive techwear lookbook. Full-viewport ergonomics, live currency conversion, and shippable garments.
+      </p>
+    </div>
+
+    <div class="flex justify-between items-end border-t border-neutral-800 pt-6">
+      <div class="font-mono text-xs text-neutral-500">
+        LOADING ARCHIVE <span id="loader-progress">000</span>%
+      </div>
+      <button id="skip-loader-btn" class="font-mono text-xs border border-neutral-700 px-4 py-2 hover:bg-white hover:text-black transition-colors uppercase tracking-widest">
+        ENTER LOOKBOOK [SPACE]
+      </button>
+    </div>
+  </div>
+
+  <!-- CUSTOM CURSOR -->
+  <div id="custom-cursor" class="hidden md:flex items-center justify-center rounded-full bg-obverse-ink/90 text-white text-[10px] font-mono tracking-wider uppercase px-3 py-1 backdrop-blur-sm border border-white/20 shadow-xl transition-opacity">
+    <span id="cursor-label">DRAG</span>
+  </div>
+
+  <!-- MAGNIFIER LENS -->
+  <div id="magnifier-lens"></div>
+
+  <!-- SEAM DIVIDER LINE (DURING TRANSITIONS) -->
+  <div id="seam-divider">
+    <div class="absolute top-1/2 -translate-y-1/2 left-2 bg-obverse-ink text-white text-[9px] font-mono uppercase tracking-widest px-2 py-1 whitespace-nowrap shadow-lg">
+      <span id="seam-label">LOOK 02</span>
+    </div>
+  </div>
+
+  <!-- MAIN VIEWPORT CONTAINER -->
+  <main class="relative w-full h-full overflow-hidden flex flex-col justify-between">
+
+    <!-- TOP NAVIGATION BAR (UI CHROME) -->
+    <header class="ui-chrome relative z-40 w-full px-6 py-5 md:px-12 flex justify-between items-center mix-blend-difference text-white">
+      <!-- Brand Logo -->
+      <a href="#" onclick="event.preventDefault(); resetToFirstLook();" class="group flex items-center gap-3">
+        <span class="text-2xl font-bold tracking-tighter uppercase leading-none">OBVERSE</span>
+        <span class="hidden sm:inline-block font-mono text-[10px] px-2 py-0.5 border border-white/30 rounded-full">AW26/SS27</span>
+      </a>
+
+      <!-- Right Nav Controls -->
+      <div class="flex items-center gap-4 sm:gap-8 font-mono text-xs tracking-wider">
+        
+        <!-- Currency Selector -->
+        <div class="relative group">
+          <button id="currency-btn" class="flex items-center gap-1.5 hover:text-neutral-300 transition-colors uppercase py-1">
+            <span id="current-currency-symbol">$</span>
+            <span id="current-currency-code">USD</span>
+            <svg class="w-3 h-3 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          
+          <!-- Dropdown -->
+          <div class="absolute right-0 top-full mt-2 w-28 bg-obverse-ink text-white rounded-lg shadow-2xl py-2 hidden group-hover:block border border-neutral-800 z-50">
+            <button onclick="setCurrency('USD')" class="w-full text-left px-4 py-1.5 hover:bg-neutral-800 flex justify-between"><span>USD</span><span>$</span></button>
+            <button onclick="setCurrency('EUR')" class="w-full text-left px-4 py-1.5 hover:bg-neutral-800 flex justify-between"><span>EUR</span><span>€</span></button>
+            <button onclick="setCurrency('GBP')" class="w-full text-left px-4 py-1.5 hover:bg-neutral-800 flex justify-between"><span>GBP</span><span>£</span></button>
+            <button onclick="setCurrency('JPY')" class="w-full text-left px-4 py-1.5 hover:bg-neutral-800 flex justify-between"><span>JPY</span><span>¥</span></button>
+          </div>
+        </div>
+
+        <!-- Archive Search Button -->
+        <button onclick="toggleSearchOverlay(true)" class="hidden sm:flex items-center gap-2 hover:text-neutral-300 transition-colors">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <span>SEARCH</span>
+        </button>
+
+        <!-- Index Overlay Button -->
+        <button onclick="toggleIndexOverlay(true)" class="hover:text-neutral-300 transition-colors flex items-center gap-1.5">
+          <span>INDEX</span>
+          <span class="text-[10px] text-white/50">(05)</span>
+        </button>
+
+        <!-- Focus Mode Toggle -->
+        <button onclick="toggleFocusMode()" class="hidden md:block hover:text-neutral-300 transition-colors" title="Toggle Focus Mode (Key: F)">
+          <span id="focus-btn-text">FOCUS [F]</span>
+        </button>
+
+        <!-- Bag Trigger Button -->
+        <button id="bag-btn" onclick="toggleBagDrawer(true)" class="relative bg-white text-black px-4 py-2 rounded-full font-sans font-medium hover:bg-neutral-200 transition-all flex items-center gap-2">
+          <span>BAG</span>
+          <span id="bag-count-badge" class="bg-obverse-blue text-white rounded-full w-4 h-4 text-[10px] flex items-center justify-center font-mono">0</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- LOOKBOOK SLIDER STAGE -->
+    <div id="slider-stage" class="slide-stage">
+      <!-- Dynamic Slides rendered by JavaScript -->
+    </div>
+
+    <!-- GIANT BACKGROUND KINETIC WORDMARK -->
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
+      <div id="bg-wordmark-text" class="bg-wordmark">ASKER</div>
+    </div>
+
+    <!-- BOTTOM FLOATING CONTROLS & INFO BAR (UI CONTROLS) -->
+    <div class="ui-controls relative z-40 w-full px-6 py-6 md:px-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 pointer-events-none">
+      
+      <!-- Left: Look Title & Collaboration Info -->
+      <div class="pointer-events-auto max-w-md space-y-1">
+        <div class="flex items-center gap-3 font-mono text-xs text-obverse-mute">
+          <span class="mask-text-line"><span id="info-season" class="mask-text-inner">AW26 COLLECTION</span></span>
+          <span>/</span>
+          <span class="mask-text-line"><span id="info-pieces-count" class="mask-text-inner">2 PIECES</span></span>
+        </div>
+        
+        <h2 class="mask-text-line text-3xl md:text-5xl font-bold tracking-tight uppercase">
+          <span id="info-brand" class="mask-text-inner">Asker × KODA</span>
+        </h2>
+
+        <div class="pt-2 flex items-center gap-4">
+          <button id="shop-look-btn" onclick="shopEntireLook()" class="bg-obverse-ink text-white px-5 py-2.5 rounded-full text-xs font-mono uppercase tracking-wider hover:bg-obverse-blue transition-colors flex items-center gap-2 group shadow-lg">
+            <span>SHOP ENTIRE LOOK</span>
+            <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Right: Digit Reel Counter & Arrow Navigation -->
+      <div class="pointer-events-auto flex items-center gap-8 self-end md:self-auto">
+        
+        <!-- Digit Reel Counter -->
+        <div class="flex items-baseline font-mono">
+          <div class="overflow-hidden h-9 text-3xl font-bold tracking-tighter">
+            <div id="digit-reel" class="transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
+              <div>01</div>
+              <div>02</div>
+              <div>03</div>
+              <div>04</div>
+              <div>05</div>
+            </div>
+          </div>
+          <span class="text-sm text-obverse-mute font-normal ml-1">/ 05</span>
+        </div>
+
+        <!-- Dot Indicators -->
+        <div class="hidden sm:flex items-center gap-2">
+          <button onclick="goToLook(0)" class="nav-dot w-8 h-1 rounded-full bg-obverse-ink transition-all"></button>
+          <button onclick="goToLook(1)" class="nav-dot w-2 h-1 rounded-full bg-obverse-line transition-all"></button>
+          <button onclick="goToLook(2)" class="nav-dot w-2 h-1 rounded-full bg-obverse-line transition-all"></button>
+          <button onclick="goToLook(3)" class="nav-dot w-2 h-1 rounded-full bg-obverse-line transition-all"></button>
+          <button onclick="goToLook(4)" class="nav-dot w-2 h-1 rounded-full bg-obverse-line transition-all"></button>
+        </div>
+
+        <!-- Arrows -->
+        <div class="flex items-center gap-2">
+          <button id="prev-btn" onclick="prevLook()" class="w-12 h-12 rounded-full border border-obverse-line flex items-center justify-center bg-white/40 backdrop-blur-md hover:bg-obverse-ink hover:text-white transition-all shadow-sm active:scale-95">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <button id="next-btn" onclick="nextLook()" class="w-12 h-12 rounded-full border border-obverse-line flex items-center justify-center bg-white/40 backdrop-blur-md hover:bg-obverse-ink hover:text-white transition-all shadow-sm active:scale-95">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- QUICK VIEW DRAWER (SLIDE-OVER) -->
+  <aside id="quickview-drawer" class="fixed inset-y-0 right-0 w-full sm:w-[480px] bg-white text-obverse-ink z-[5000] shadow-2xl translate-x-full transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-between">
+    <!-- Header -->
+    <div class="px-6 py-5 border-b border-obverse-line flex items-center justify-between">
+      <div class="font-mono text-xs text-obverse-mute uppercase tracking-wider" id="qv-code">AK-07-TR</div>
+      <button onclick="closeQuickView()" class="w-8 h-8 rounded-full hover:bg-neutral-100 flex items-center justify-center transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Body Scrollable -->
+    <div class="flex-1 overflow-y-auto px-6 py-6 space-y-8">
+      
+      <!-- Zoom Crop Detail Container -->
+      <div class="relative w-full h-64 bg-neutral-100 rounded-xl overflow-hidden border border-obverse-line group">
+        <div id="qv-crop-preview" class="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-110"></div>
+        <div class="absolute bottom-3 left-3 bg-obverse-ink/80 text-white text-[10px] font-mono px-2 py-1 rounded backdrop-blur-sm">
+          300% DETAIL INSPECTION CROP
+        </div>
+      </div>
+
+      <!-- Title & Price -->
+      <div class="space-y-2">
+        <h3 id="qv-name" class="text-2xl font-bold tracking-tight uppercase">AK 07 Tech Trench</h3>
+        <div class="text-xl font-mono font-medium text-obverse-blue" id="qv-price">$680 USD</div>
+        <p id="qv-desc" class="text-sm text-obverse-mute leading-relaxed font-light">
+          Constructed from 3-layer weatherproof membrane with articulated drop-shoulders and concealed magnetic storm flap.
+        </p>
+      </div>
+
+      <!-- Colour Swatches -->
+      <div class="space-y-2">
+        <div class="font-mono text-xs text-obverse-mute uppercase">COLOUR: <span id="qv-selected-color" class="text-black font-semibold">Obsidian</span></div>
+        <div id="qv-color-container" class="flex items-center gap-3">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+      <!-- Size Selector -->
+      <div class="space-y-2">
+        <div class="flex justify-between font-mono text-xs">
+          <span class="text-obverse-mute">SELECT SIZE</span>
+          <button class="underline text-obverse-ink hover:text-obverse-blue">SIZE GUIDE</button>
+        </div>
+        <div class="grid grid-cols-4 gap-2 font-mono text-xs">
+          <button onclick="selectQVSize('S', this)" class="qv-size-btn py-3 border border-obverse-line rounded-lg hover:border-black transition-all">S</button>
+          <button onclick="selectQVSize('M', this)" class="qv-size-btn py-3 border border-black bg-black text-white rounded-lg transition-all">M</button>
+          <button onclick="selectQVSize('L', this)" class="qv-size-btn py-3 border border-obverse-line rounded-lg hover:border-black transition-all">L</button>
+          <button onclick="selectQVSize('XL', this)" class="qv-size-btn py-3 border border-obverse-line rounded-lg hover:border-black transition-all">XL</button>
+        </div>
+      </div>
+
+      <!-- Expandable Accordion Specs -->
+      <div class="border-t border-obverse-line pt-4 space-y-3 font-sans">
+        
+        <div class="accordion-item border-b border-obverse-line pb-3">
+          <button onclick="toggleAccordion(this)" class="w-full flex justify-between items-center text-xs font-mono uppercase text-left py-1">
+            <span>Technical Construction</span>
+            <svg class="accordion-icon w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="accordion-content text-xs text-obverse-mute pt-2 leading-relaxed" id="qv-spec-construction">
+            3-Layer Weatherproof Membrane (20,000mm water column), fully taped seams, laser-cut ventilation ports.
+          </div>
+        </div>
+
+        <div class="accordion-item border-b border-obverse-line pb-3">
+          <button onclick="toggleAccordion(this)" class="w-full flex justify-between items-center text-xs font-mono uppercase text-left py-1">
+            <span>Fit & Sizing</span>
+            <svg class="accordion-icon w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="accordion-content text-xs text-obverse-mute pt-2 leading-relaxed" id="qv-spec-fit">
+            Ergonomic posture cut designed for modular layering. Takes your standard size for tailored boxy fit.
+          </div>
+        </div>
+
+        <div class="accordion-item pb-1">
+          <button onclick="toggleAccordion(this)" class="w-full flex justify-between items-center text-xs font-mono uppercase text-left py-1">
+            <span>Shipping & Returns</span>
+            <svg class="accordion-icon w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="accordion-content text-xs text-obverse-mute pt-2 leading-relaxed" id="qv-spec-shipping">
+            Dispatched in vacuum sealed reusable garment storage bag. Complimentary global express shipping & 14-day returns.
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Footer CTA -->
+    <div class="p-6 border-t border-obverse-line bg-neutral-50">
+      <button id="qv-add-btn" onclick="addCurrentQVToBag()" class="w-full py-4 bg-obverse-ink text-white font-mono text-xs uppercase tracking-widest rounded-xl hover:bg-obverse-blue transition-colors flex items-center justify-center gap-3 shadow-lg">
+        <span>ADD TO BAG</span>
+        <span>—</span>
+        <span id="qv-btn-price">$680</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- SHOPPING BAG DRAWER (SLIDE-OVER) -->
+  <aside id="bag-drawer" class="fixed inset-y-0 right-0 w-full sm:w-[460px] bg-white text-obverse-ink z-[5000] shadow-2xl translate-x-full transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-between">
+    
+    <!-- Header -->
+    <div class="px-6 py-5 border-b border-obverse-line flex items-center justify-between">
+      <div class="font-mono text-xs font-semibold uppercase tracking-wider flex items-center gap-2">
+        <span>YOUR BAG</span>
+        <span id="bag-item-count-label" class="text-obverse-mute">(0 ITEMS)</span>
+      </div>
+      <button onclick="toggleBagDrawer(false)" class="w-8 h-8 rounded-full hover:bg-neutral-100 flex items-center justify-center transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Free Shipping Bar -->
+    <div class="bg-neutral-100 px-6 py-3 border-b border-obverse-line font-mono text-[11px] space-y-1.5">
+      <div class="flex justify-between items-center text-obverse-mute" id="shipping-threshold-text">
+        <span>EXPRESS SHIPPING THRESHOLD</span>
+        <span id="shipping-progress-percent" class="font-bold text-black">0%</span>
+      </div>
+      <div class="w-full bg-neutral-200 h-1.5 rounded-full overflow-hidden">
+        <div id="shipping-bar-fill" class="bg-obverse-blue h-full w-0 transition-all duration-500"></div>
+      </div>
+    </div>
+
+    <!-- Bag Items Container -->
+    <div id="bag-items-list" class="flex-1 overflow-y-auto px-6 py-4 divide-y divide-obverse-line">
+      <!-- Rendered dynamically -->
+    </div>
+
+    <!-- Footer Checkout -->
+    <div class="p-6 border-t border-obverse-line bg-neutral-50 space-y-4">
+      <div class="space-y-2 font-mono text-xs">
+        <div class="flex justify-between text-obverse-mute">
+          <span>SUBTOTAL</span>
+          <span id="bag-subtotal-price" class="text-black font-semibold">$0.00</span>
+        </div>
+        <div class="flex justify-between text-obverse-mute">
+          <span>ESTIMATED TAX / DUTIES</span>
+          <span>CALCULATED AT CHECKOUT</span>
+        </div>
+        <div class="flex justify-between text-sm font-bold text-black border-t border-obverse-line pt-2">
+          <span>TOTAL</span>
+          <span id="bag-total-price">$0.00</span>
+        </div>
+      </div>
+
+      <button onclick="triggerSimulatedCheckout()" class="w-full py-4 bg-obverse-ink text-white font-mono text-xs uppercase tracking-widest rounded-xl hover:bg-obverse-blue transition-colors flex items-center justify-center gap-2 shadow-xl">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        <span>PROCEED TO CHECKOUT</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ARCHIVE SEARCH OVERLAY -->
+  <div id="search-overlay" class="fixed inset-0 bg-obverse-ink/95 text-white z-[6000] opacity-0 pointer-events-none transition-opacity duration-400 ease-out flex flex-col p-6 md:p-12 backdrop-blur-xl">
+    <div class="flex justify-between items-center pb-6 border-b border-neutral-800">
+      <div class="font-mono text-xs text-neutral-400">ARCHIVE CATALOGUE SEARCH</div>
+      <button onclick="toggleSearchOverlay(false)" class="text-neutral-400 hover:text-white font-mono text-xs flex items-center gap-2">
+        <span>CLOSE</span> [ESC]
+      </button>
+    </div>
+
+    <!-- Search Input -->
+    <div class="py-8 border-b border-neutral-800">
+      <input id="archive-search-input" type="text" placeholder="Search by garment, code, colour or season..." oninput="onSearchInput(this.value)" class="w-full bg-transparent text-2xl md:text-5xl font-light focus:outline-none placeholder:text-neutral-700 tracking-tight">
+    </div>
+
+    <!-- Filter Tags -->
+    <div class="py-4 flex gap-3 font-mono text-xs overflow-x-auto">
+      <button onclick="filterSearchCategory('ALL')" class="px-4 py-1.5 rounded-full border border-white bg-white text-black">ALL PIECES (12)</button>
+      <button onclick="filterSearchCategory('AW26')" class="px-4 py-1.5 rounded-full border border-neutral-800 hover:border-neutral-600">AW26</button>
+      <button onclick="filterSearchCategory('SS27')" class="px-4 py-1.5 rounded-full border border-neutral-800 hover:border-neutral-600">SS27</button>
+      <button onclick="filterSearchCategory('JACKET')" class="px-4 py-1.5 rounded-full border border-neutral-800 hover:border-neutral-600">OUTERWEAR</button>
+      <button onclick="filterSearchCategory('TROUSER')" class="px-4 py-1.5 rounded-full border border-neutral-800 hover:border-neutral-600">TROUSERS</button>
+      <button onclick="filterSearchCategory('BOOT')" class="px-4 py-1.5 rounded-full border border-neutral-800 hover:border-neutral-600">FOOTWEAR</button>
+    </div>
+
+    <!-- Search Results Grid -->
+    <div id="search-results-grid" class="flex-1 overflow-y-auto py-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <!-- JS Rendered -->
+    </div>
+  </div>
+
+  <!-- 5-COLUMN LOOK INDEX OVERLAY -->
+  <div id="index-overlay" class="fixed inset-0 bg-obverse-ink z-[6000] opacity-0 pointer-events-none transition-opacity duration-500 ease-out flex flex-col">
+    <!-- Header -->
+    <div class="px-6 py-5 border-b border-neutral-800 flex justify-between items-center text-white font-mono text-xs">
+      <span>LOOK INDEX CATALOGUE</span>
+      <button onclick="toggleIndexOverlay(false)" class="text-neutral-400 hover:text-white flex items-center gap-2">
+        <span>CLOSE</span> [ESC]
+      </button>
+    </div>
+
+    <!-- 5 Columns Container -->
+    <div id="index-columns-container" class="flex-1 grid grid-cols-1 md:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-neutral-800 overflow-y-auto">
+      <!-- Rendered via JS -->
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed bottom-6 left-6 z-[9000] flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <script>
+    /* ==========================================================================
+       1. DATA CATALOGUE & STATE MANAGEMENT
+       ========================================================================== */
+    
+    const CURRENCIES = {
+      USD: { symbol: '$', rate: 1.0, prefix: true },
+      EUR: { symbol: '€', rate: 0.92, prefix: true },
+      GBP: { symbol: '£', rate: 0.79, prefix: true },
+      JPY: { symbol: '¥', rate: 155.0, prefix: true }
+    };
+
+    const LOOKS_DATA = [
+      {
+        id: 1,
+        code: "LOOK 01",
+        brand: "Asker × KODA",
+        wordmark: "ASKER",
+        season: "AW26 COLLECTION",
+        img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1600&q=85",
+        pieces: [
+          {
+            id: "ak-07-trench",
+            code: "AK-07-TR",
+            name: "AK 07 Tech Trench",
+            priceUSD: 680,
+            category: "JACKET",
+            season: "AW26",
+            hotspot: { x: 46, y: 36 },
+            colors: ["Obsidian", "Slate", "Chalk"],
+            desc: "Constructed from 3-layer weatherproof membrane with articulated drop-shoulders and concealed magnetic storm flap.",
+            specs: {
+              construction: "3-Layer Weatherproof Membrane (20,000mm water column), fully taped seams, laser-cut ventilation ports.",
+              fit: "Ergonomic posture cut designed for modular layering. Takes standard size.",
+              shipping: "Dispatched in vacuum sealed reusable garment storage container."
+            }
+          },
+          {
+            id: "ak-07-boot",
+            code: "AK-07-BT",
+            name: "AK 07 Strap Boot",
+            priceUSD: 420,
+            category: "BOOT",
+            season: "AW26",
+            hotspot: { x: 54, y: 82 },
+            colors: ["Matte Black", "Ash"],
+            desc: "High-top tactical footwear featuring dual Fidlock magnetic buckles and Vibram Megagrip lug sole.",
+            specs: {
+              construction: "Waterproof full-grain leather, Cordura nylon trim, Vibram Megagrip rubber compound.",
+              fit: "True to size. Internal padded memory foam sleeve.",
+              shipping: "Includes spare reflective tactical laces and custom box."
+            }
+          }
+        ]
+      },
+      {
+        id: 2,
+        code: "LOOK 02",
+        brand: "Vesper × RUNE",
+        wordmark: "VESPER",
+        season: "SS27 COLLECTION",
+        img: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=1600&q=85",
+        pieces: [
+          {
+            id: "vr-03-parka",
+            code: "VR-03-PK",
+            name: "VR 03 Padded Parka",
+            priceUSD: 740,
+            category: "JACKET",
+            season: "SS27",
+            hotspot: { x: 48, y: 28 },
+            colors: ["Graphite", "Moss", "Bone"],
+            desc: "Ultra-lightweight modular down parka with detachable utility harness and internal sling straps.",
+            specs: {
+              construction: "800-fill goose down insulation, ripstop nylon shell with DWR finish.",
+              fit: "Boxy silhouette with dual-drawcord hem adjustment.",
+              shipping: "Includes padded travel compression pouch."
+            }
+          },
+          {
+            id: "vr-03-trouser",
+            code: "VR-03-TR",
+            name: "VR 03 Cargo Trouser",
+            priceUSD: 360,
+            category: "TROUSER",
+            season: "SS27",
+            hotspot: { x: 52, y: 64 },
+            colors: ["Graphite", "Sand"],
+            desc: "Articulated knee cargo pants with 8 waterproof zip pockets and adjustable ankle cinch straps.",
+            specs: {
+              construction: "4-way stretch technical twill with reinforced seat panels.",
+              fit: "Tapered fit with drop crotch mobility gusset.",
+              shipping: "Shipped in climate-neutral eco mailer."
+            }
+          },
+          {
+            id: "vr-03-runner",
+            code: "VR-03-RN",
+            name: "VR 03 Track Runner",
+            priceUSD: 310,
+            category: "BOOT",
+            season: "SS27",
+            hotspot: { x: 45, y: 88 },
+            colors: ["Alloy", "Carbon"],
+            desc: "Low-profile trail running shoe with fast-lace speed system and TPU heel counter.",
+            specs: {
+              construction: "Seamless engineered mesh upper with EVA cushion midsole.",
+              fit: "Snug athletic fit. Recommend sizing up half size.",
+              shipping: "Standard express delivery with tracked return label."
+            }
+          }
+        ]
+      },
+      {
+        id: 3,
+        code: "LOOK 03",
+        brand: "Morrow × TEKTON",
+        wordmark: "MORROW",
+        season: "AW26 COLLECTION",
+        img: "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=1600&q=85",
+        pieces: [
+          {
+            id: "mt-11-jumpsuit",
+            code: "MT-11-JS",
+            name: "MT 11 Utility Jumpsuit",
+            priceUSD: 620,
+            category: "JACKET",
+            season: "AW26",
+            hotspot: { x: 50, y: 42 },
+            colors: ["Charcoal", "Olive"],
+            desc: "Full-body industrial overall with 2-way asymmetrical front closure and integrated webbing harness.",
+            specs: {
+              construction: "Heavyweight Abrasion-resistant Schoeller fabric with Nanosphere treatment.",
+              fit: "Straight fit with internal waistband adjuster.",
+              shipping: "Garment bag dispatch with custom hanger."
+            }
+          },
+          {
+            id: "mt-11-boot",
+            code: "MT-11-BT",
+            name: "MT 11 Field Boot",
+            priceUSD: 450,
+            category: "BOOT",
+            season: "AW26",
+            hotspot: { x: 52, y: 84 },
+            colors: ["Black", "Tarmac"],
+            desc: "Heavy-duty combat boot with steel toe cap and waterproof inner membrane sleeve.",
+            specs: {
+              construction: "Full oil-rubbed leather with lugged rubber outsole.",
+              fit: "Generous fit. Suitable for thick winter socks.",
+              shipping: "Double-boxed protective packaging."
+            }
+          }
+        ]
+      },
+      {
+        id: 4,
+        code: "LOOK 04",
+        brand: "Lumen × AISO",
+        wordmark: "LUMEN",
+        season: "SS27 COLLECTION",
+        img: "https://images.unsplash.com/photo-1508427953056-b00b8d78ebf5?auto=format&fit=crop&w=1600&q=85",
+        pieces: [
+          {
+            id: "la-05-coat",
+            code: "LA-05-CT",
+            name: "LA 05 Layered Coat",
+            priceUSD: 810,
+            category: "JACKET",
+            season: "SS27",
+            hotspot: { x: 44, y: 32 },
+            colors: ["Fog", "Cobalt", "Ink"],
+            desc: "Multi-panel translucent duster coat with laser-welded seams and hidden throat latch.",
+            specs: {
+              construction: "Semi-translucent Dyneema composite fabric.",
+              fit: "Flowing draped silhouette with dramatic rear split.",
+              shipping: "Special handling garment box with humidity control."
+            }
+          },
+          {
+            id: "la-05-trouser",
+            code: "LA-05-TR",
+            name: "LA 05 Wide Trouser",
+            priceUSD: 340,
+            category: "TROUSER",
+            season: "SS27",
+            hotspot: { x: 56, y: 68 },
+            colors: ["Fog", "Ink"],
+            desc: "Pleated wide-leg trouser with concealed snap side slits for dynamic movement.",
+            specs: {
+              construction: "Fluid wool-poly blend with hydrophobic coating.",
+              fit: "High-waisted relaxed wide leg.",
+              shipping: "Standard luxury garment box delivery."
+            }
+          },
+          {
+            id: "la-05-boot",
+            code: "LA-05-BT",
+            name: "LA 05 Cloud Boot",
+            priceUSD: 390,
+            category: "BOOT",
+            season: "SS27",
+            hotspot: { x: 48, y: 86 },
+            colors: ["Chalk", "Silver"],
+            desc: "Sculpted platform ankle boot with seamless neoprene sock liner and chunky wedge sole.",
+            specs: {
+              construction: "Synthetic leather composite with featherlight EVA platform.",
+              fit: "Runs true to size.",
+              shipping: "Includes microfiber polishing cloth."
+            }
+          }
+        ]
+      },
+      {
+        id: 5,
+        code: "LOOK 05",
+        brand: "Nord × HALE",
+        wordmark: "NORD",
+        season: "AW26 COLLECTION",
+        img: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1600&q=85",
+        pieces: [
+          {
+            id: "nh-09-cape",
+            code: "NH-09-CP",
+            name: "NH 09 Shell Cape",
+            priceUSD: 590,
+            category: "JACKET",
+            season: "AW26",
+            hotspot: { x: 52, y: 34 },
+            colors: ["Storm", "Ice", "Black"],
+            desc: "Asymmetrical weatherproof poncho cape with expandable side gussets and storm collar.",
+            specs: {
+              construction: "Gore-Tex Pro 3-layer laminate with Gore Seam tape.",
+              fit: "One size fits all posture draping.",
+              shipping: "Delivered in waterproof roll-top sack."
+            }
+          },
+          {
+            id: "nh-09-trouser",
+            code: "NH-09-TR",
+            name: "NH 09 Pleat Trouser",
+            priceUSD: 330,
+            category: "TROUSER",
+            season: "AW26",
+            hotspot: { x: 46, y: 70 },
+            colors: ["Storm", "Charcoal"],
+            desc: "Tapered tech trouser with integrated magnetic belt buckle and deep slant pockets.",
+            specs: {
+              construction: "Double-weave stretch softshell fabric.",
+              fit: "Cropped ankle length with tapered hem.",
+              shipping: "Standard delivery."
+            }
+          }
+        ]
+      }
+    ];
+
+    // Global App State
+    let currentLookIndex = 0;
+    let currentCurrency = 'USD';
+    let isTransitioning = false;
+    let shoppingBag = []; // { piece, size, color, qty }
+    let currentQVItem = null;
+    let selectedQVSize = 'M';
+    let selectedQVColor = '';
+    let isFocusMode = false;
+
+    // Pointer lerp position for custom cursor & magnifier
+    let pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let cursorTarget = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let isHoldingPointer = false;
+    let holdTimer = null;
+
+    /* ==========================================================================
+       2. INITIALIZATION & LOADER
+       ========================================================================== */
+
+    window.addEventListener('load', () => {
+      initApp();
+    });
+
+    function initApp() {
+      // Preload Images
+      LOOKS_DATA.forEach(look => {
+        const img = new Image();
+        img.src = look.img;
+      });
+
+      // Handle Loader Curtain
+      const urlParams = new URLSearchParams(window.location.search);
+      const isRecMode = urlParams.has('rec');
+
+      if (isRecMode) {
+        document.body.classList.add('rec-mode');
+        document.getElementById('intro-curtain').style.display = 'none';
+      } else {
+        runLoaderAnimation();
+      }
+
+      // Render Stage & Overlays
+      renderSliderStage();
+      updateLookInfoUI(0, false);
+      renderSearchGrid();
+      renderIndexOverlay();
+      setupEventListeners();
+      startCursorLoop();
+    }
+
+    function runLoaderAnimation() {
+      let progress = 0;
+      const progressEl = document.getElementById('loader-progress');
+      const curtain = document.getElementById('intro-curtain');
+
+      const interval = setInterval(() => {
+        progress += Math.floor(Math.random() * 15) + 5;
+        if (progress >= 100) {
+          progress = 100;
+          clearInterval(interval);
+          setTimeout(() => {
+            curtain.style.transform = 'translateY(-100%)';
+          }, 300);
+        }
+        progressEl.textContent = String(progress).padStart(3, '0');
+      }, 60);
+
+      document.getElementById('skip-loader-btn').addEventListener('click', () => {
+        clearInterval(interval);
+        curtain.style.transform = 'translateY(-100%)';
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' && curtain.style.transform !== 'translateY(-100%)') {
+          curtain.style.transform = 'translateY(-100%)';
+        }
+      });
+    }
+
+    /* ==========================================================================
+       3. SLIDER STAGE & TRANSITION ENGINE
+       ========================================================================== */
+
+    function renderSliderStage() {
+      const stage = document.getElementById('slider-stage');
+      stage.innerHTML = '';
+
+      LOOKS_DATA.forEach((look, index) => {
+        const layer = document.createElement('div');
+        layer.className = `slide-layer slide-layer-${index}`;
+        layer.style.zIndex = index === 0 ? 10 : 1;
+        layer.style.clipPath = index === 0 ? 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' : 'polygon(0 0, 0 0, 0 100%, 0 100%)';
+
+        layer.innerHTML = `
+          <div class="relative w-full h-full flex items-center justify-center">
+            <!-- Main Photo -->
+            <img src="${look.img}" alt="${look.brand}" class="look-image w-full h-full object-cover object-center" data-index="${index}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1600&q=85';">
+            
+            <!-- Hotspots Container -->
+            <div class="hotspot-container absolute inset-0 pointer-events-none">
+              ${look.pieces.map(p => renderHotspotHTML(p, look.id)).join('')}
+            </div>
+          </div>
+        `;
+
+        stage.appendChild(layer);
+      });
+    }
+
+    function renderHotspotHTML(piece, lookId) {
+      const formattedPrice = formatPrice(piece.priceUSD);
+      return `
+        <div class="hotspot-item absolute pointer-events-auto" style="left: ${piece.hotspot.x}%; top: ${piece.hotspot.y}%;">
+          <div class="relative group">
+            
+            <!-- Pulse Dot Trigger -->
+            <button onclick="openQuickView('${piece.id}')" class="relative w-7 h-7 flex items-center justify-center focus:outline-none" onmouseenter="updateCursorText('VIEW')" onmouseleave="updateCursorText('DRAG')">
+              <span class="hotspot-ring absolute inset-0 rounded-full bg-white/70"></span>
+              <span class="w-3 h-3 rounded-full bg-white shadow-lg border border-obverse-ink group-hover:scale-125 transition-transform duration-300"></span>
+            </button>
+
+            <!-- Frosted Glass Tag Card -->
+            <div class="hotspot-card glass-card absolute left-8 top-1/2 -translate-y-1/2 w-64 p-3.5 rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all duration-300 transform group-hover:translate-x-0 -translate-x-2 z-50">
+              <div class="flex justify-between items-start font-mono text-[10px] text-obverse-mute mb-1">
+                <span>${piece.code}</span>
+                <span>${piece.category}</span>
+              </div>
+              
+              <div class="font-bold text-xs uppercase tracking-tight mb-1 text-black">${piece.name}</div>
+              <div class="font-mono text-xs text-obverse-blue font-semibold mb-2 live-price" data-usd="${piece.priceUSD}">${formattedPrice}</div>
+              
+              <div class="flex items-center justify-between gap-2 border-t border-obverse-line/60 pt-2 font-mono text-[10px]">
+                <div class="flex items-center gap-1">
+                  <span class="text-obverse-mute">ADD:</span>
+                  ${['S','M','L','XL'].map(sz => `<button onclick="event.stopPropagation(); quickAddFromHotspot('${piece.id}', '${sz}', this);" class="w-5 h-5 rounded border border-black/20 hover:border-black hover:bg-black hover:text-white transition-colors flex items-center justify-center">${sz}</button>`).join('')}
+                </div>
+                <button onclick="openQuickView('${piece.id}')" class="underline text-black font-semibold hover:text-obverse-blue">VIEW</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      `;
+    }
+
+    function goToLook(targetIndex, direction = null) {
+      if (isTransitioning || targetIndex === currentLookIndex) return;
+      isTransitioning = true;
+
+      const oldIndex = currentLookIndex;
+      const isNext = direction ? direction === 'next' : targetIndex > oldIndex;
+      currentLookIndex = targetIndex;
+
+      const currentLayer = document.querySelectorAll('.slide-layer')[oldIndex];
+      const nextLayer = document.querySelectorAll('.slide-layer')[targetIndex];
+      const seamDivider = document.getElementById('seam-divider');
+      const seamLabel = document.getElementById('seam-label');
+
+      seamLabel.textContent = LOOKS_DATA[targetIndex].code + ' — ' + LOOKS_DATA[targetIndex].brand;
+      seamDivider.style.opacity = '1';
+
+      // Set stacking z-index
+      nextLayer.style.zIndex = 30;
+      currentLayer.style.zIndex = 10;
+
+      // Animate clip-path wipe
+      const startClip = isNext ? 'polygon(100% 0, 100% 0, 100% 100%, 100% 100%)' : 'polygon(0 0, 0 0, 0 100%, 0 100%)';
+      const endClip = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
+
+      nextLayer.style.clipPath = startClip;
+
+      // Animation parameters
+      const startTime = performance.now();
+      const duration = 850; // ms
+
+      function animateWipe(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        // Custom easing curve
+        const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+
+        let clipValue = '';
+        let seamPos = 0;
+
+        if (isNext) {
+          const p = (1 - ease) * 100;
+          clipValue = `polygon(${p}% 0, 100% 0, 100% 100%, ${p}% 100%)`;
+          seamPos = p;
+        } else {
+          const p = ease * 100;
+          clipValue = `polygon(0 0, ${p}% 0, ${p}% 100%, 0 100%)`;
+          seamPos = p;
+        }
+
+        nextLayer.style.clipPath = clipValue;
+        seamDivider.style.transform = `translateX(${seamPos}vw)`;
+
+        if (progress < 1) {
+          requestAnimationFrame(animateWipe);
+        } else {
+          // Complete transition reset
+          currentLayer.style.clipPath = 'polygon(0 0, 0 0, 0 100%, 0 100%)';
+          currentLayer.style.zIndex = 1;
+          nextLayer.style.zIndex = 10;
+          seamDivider.style.opacity = '0';
+          isTransitioning = false;
+        }
+      }
+
+      requestAnimationFrame(animateWipe);
+      updateLookInfoUI(targetIndex, true);
+    }
+
+    function nextLook() {
+      const target = (currentLookIndex + 1) % LOOKS_DATA.length;
+      goToLook(target, 'next');
+    }
+
+    function prevLook() {
+      const target = (currentLookIndex - 1 + LOOKS_DATA.length) % LOOKS_DATA.length;
+      goToLook(target, 'prev');
+    }
+
+    function resetToFirstLook() {
+      goToLook(0);
+    }
+
+    /* ==========================================================================
+       4. UI KINETIC TYPOGRAPHY & REEL COUNTER UPDATES
+       ========================================================================== */
+
+    function updateLookInfoUI(index, animate = true) {
+      const look = LOOKS_DATA[index];
+
+      // Reel digit counter
+      const reel = document.getElementById('digit-reel');
+      reel.style.transform = `translateY(-${index * 36}px)`;
+
+      // Dots
+      document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+        if (i === index) {
+          dot.className = 'nav-dot w-8 h-1 rounded-full bg-obverse-ink transition-all';
+        } else {
+          dot.className = 'nav-dot w-2 h-1 rounded-full bg-obverse-line transition-all';
+        }
+      });
+
+      // Background Wordmark
+      const wordmarkEl = document.getElementById('bg-wordmark-text');
+      wordmarkEl.style.opacity = '0';
+      setTimeout(() => {
+        wordmarkEl.textContent = look.wordmark;
+        wordmarkEl.style.opacity = '1';
+      }, 250);
+
+      // Line-masked typography swaps
+      const brandEl = document.getElementById('info-brand');
+      const seasonEl = document.getElementById('info-season');
+      const countEl = document.getElementById('info-pieces-count');
+
+      if (animate) {
+        [brandEl, seasonEl, countEl].forEach(el => el.classList.add('is-sliding'));
+
+        setTimeout(() => {
+          brandEl.textContent = look.brand;
+          seasonEl.textContent = look.season;
+          countEl.textContent = `${look.pieces.length} PIECES`;
+          [brandEl, seasonEl, countEl].forEach(el => el.classList.remove('is-sliding'));
+        }, 300);
+      } else {
+        brandEl.textContent = look.brand;
+        seasonEl.textContent = look.season;
+        countEl.textContent = `${look.pieces.length} PIECES`;
+      }
+    }
+
+    /* ==========================================================================
+       5. CURRENCY CONVERTER & PRICE INTERPOLATION
+       ========================================================================== */
+
+    function setCurrency(code) {
+      if (!CURRENCIES[code] || currentCurrency === code) return;
+      currentCurrency = code;
+
+      document.getElementById('current-currency-symbol').textContent = CURRENCIES[code].symbol;
+      document.getElementById('current-currency-code').textContent = code;
+
+      // Update all visible live prices
+      document.querySelectorAll('.live-price').forEach(el => {
+        const usdPrice = parseFloat(el.getAttribute('data-usd'));
+        if (usdPrice) {
+          el.textContent = formatPrice(usdPrice);
+        }
+      });
+
+      // Update Quick View price if open
+      if (currentQVItem) {
+        document.getElementById('qv-price').textContent = formatPrice(currentQVItem.priceUSD);
+        document.getElementById('qv-btn-price').textContent = formatPrice(currentQVItem.priceUSD);
+      }
+
+      // Update Shopping Bag
+      renderBagDrawerItems();
+    }
+
+    function formatPrice(usdPrice) {
+      const curr = CURRENCIES[currentCurrency];
+      const converted = usdPrice * curr.rate;
+
+      if (currentCurrency === 'JPY') {
+        return `${curr.symbol}${Math.round(converted).toLocaleString()}`;
+      }
+      return `${curr.symbol}${converted.toFixed(0)} ${currentCurrency}`;
+    }
+
+    /* ==========================================================================
+       6. QUICK VIEW DRAWER & ACCORDION
+       ========================================================================== */
+
+    function openQuickView(pieceId) {
+      let foundPiece = null;
+      let foundLook = null;
+
+      LOOKS_DATA.forEach(look => {
+        const p = look.pieces.find(item => item.id === pieceId);
+        if (p) {
+          foundPiece = p;
+          foundLook = look;
+        }
+      });
+
+      if (!foundPiece) return;
+      currentQVItem = foundPiece;
+
+      // Populate Drawer
+      document.getElementById('qv-code').textContent = foundPiece.code + ' / ' + foundLook.season;
+      document.getElementById('qv-name').textContent = foundPiece.name;
+      document.getElementById('qv-price').textContent = formatPrice(foundPiece.priceUSD);
+      document.getElementById('qv-btn-price').textContent = formatPrice(foundPiece.priceUSD);
+      document.getElementById('qv-desc').textContent = foundPiece.desc;
+
+      // Zoom Crop Preview background
+      const cropPreview = document.getElementById('qv-crop-preview');
+      cropPreview.style.backgroundImage = `url('${foundLook.img}')`;
+      cropPreview.style.backgroundPosition = `${foundPiece.hotspot.x}% ${foundPiece.hotspot.y}%`;
+
+      // Swatches
+      selectedQVColor = foundPiece.colors[0];
+      document.getElementById('qv-selected-color').textContent = selectedQVColor;
+      const colorContainer = document.getElementById('qv-color-container');
+      colorContainer.innerHTML = foundPiece.colors.map((c, i) => `
+        <button onclick="selectQVColor('${c}', this)" class="px-3 py-1.5 rounded-full border text-xs font-mono transition-all ${i===0?'border-black bg-black text-white':'border-obverse-line text-black hover:border-black'}">
+          ${c}
+        </button>
+      `).join('');
+
+      // Accordion Specs
+      document.getElementById('qv-spec-construction').textContent = foundPiece.specs.construction;
+      document.getElementById('qv-spec-fit').textContent = foundPiece.specs.fit;
+      document.getElementById('qv-spec-shipping').textContent = foundPiece.specs.shipping;
+
+      // Open Drawer
+      document.getElementById('quickview-drawer').classList.remove('translate-x-full');
+      toggleSearchOverlay(false);
+      toggleIndexOverlay(false);
+    }
+
+    function closeQuickView() {
+      document.getElementById('quickview-drawer').classList.add('translate-x-full');
+    }
+
+    function selectQVColor(color, btn) {
+      selectedQVColor = color;
+      document.getElementById('qv-selected-color').textContent = color;
+      document.querySelectorAll('#qv-color-container button').forEach(b => {
+        b.className = 'px-3 py-1.5 rounded-full border text-xs font-mono transition-all border-obverse-line text-black hover:border-black';
+      });
+      btn.className = 'px-3 py-1.5 rounded-full border text-xs font-mono transition-all border-black bg-black text-white';
+    }
+
+    function selectQVSize(size, btn) {
+      selectedQVSize = size;
+      document.querySelectorAll('.qv-size-btn').forEach(b => {
+        b.className = 'qv-size-btn py-3 border border-obverse-line rounded-lg hover:border-black transition-all';
+      });
+      btn.className = 'qv-size-btn py-3 border border-black bg-black text-white rounded-lg transition-all';
+    }
+
+    function toggleAccordion(btn) {
+      const item = btn.parentElement;
+      item.classList.toggle('active');
+    }
+
+    /* ==========================================================================
+       7. SHOPPING BAG DRAWER & FLY-TO-BAG ANIMATION
+       ========================================================================== */
+
+    function quickAddFromHotspot(pieceId, size, triggerBtn) {
+      let piece = null;
+      LOOKS_DATA.forEach(l => {
+        const found = l.pieces.find(p => p.id === pieceId);
+        if (found) piece = found;
+      });
+      if (!piece) return;
+
+      addItemToBag(piece, size, piece.colors[0]);
+      triggerFlyToBagAnimation(triggerBtn);
+    }
+
+    function addCurrentQVToBag() {
+      if (!currentQVItem) return;
+      addItemToBag(currentQVItem, selectedQVSize, selectedQVColor);
+      triggerFlyToBagAnimation(document.getElementById('qv-add-btn'));
+      closeQuickView();
+      toggleBagDrawer(true);
+    }
+
+    function shopEntireLook() {
+      const look = LOOKS_DATA[currentLookIndex];
+      const shopBtn = document.getElementById('shop-look-btn');
+
+      look.pieces.forEach((p, index) => {
+        setTimeout(() => {
+          addItemToBag(p, 'M', p.colors[0]);
+          triggerFlyToBagAnimation(shopBtn);
+        }, index * 150);
+      });
+
+      showToast(`Added ${look.pieces.length} items from ${look.brand} to Bag.`);
+    }
+
+    function addItemToBag(piece, size, color) {
+      const existing = shoppingBag.find(item => item.piece.id === piece.id && item.size === size && item.color === color);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        shoppingBag.push({ piece, size, color, qty: 1 });
+      }
+      updateBagUI();
+    }
+
+    function updateBagUI() {
+      const totalCount = shoppingBag.reduce((acc, item) => acc + item.qty, 0);
+      document.getElementById('bag-count-badge').textContent = totalCount;
+      document.getElementById('bag-item-count-label').textContent = `(${totalCount} ITEMS)`;
+
+      renderBagDrawerItems();
+    }
+
+    function renderBagDrawerItems() {
+      const container = document.getElementById('bag-items-list');
+      
+      if (shoppingBag.length === 0) {
+        container.innerHTML = `
+          <div class="h-64 flex flex-col items-center justify-center text-center text-obverse-mute font-mono text-xs space-y-3">
+            <svg class="w-10 h-10 stroke-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+            <div>YOUR BAG IS CURRENTLY EMPTY</div>
+          </div>
+        `;
+        document.getElementById('bag-subtotal-price').textContent = formatPrice(0);
+        document.getElementById('bag-total-price').textContent = formatPrice(0);
+        document.getElementById('shipping-bar-fill').style.width = '0%';
+        document.getElementById('shipping-progress-percent').textContent = '0%';
+        return;
+      }
+
+      let subtotalUSD = 0;
+
+      container.innerHTML = shoppingBag.map((item, index) => {
+        const itemTotalUSD = item.piece.priceUSD * item.qty;
+        subtotalUSD += itemTotalUSD;
+
+        // Find image for thumbnail
+        let lookImg = LOOKS_DATA[0].img;
+        LOOKS_DATA.forEach(l => {
+          if (l.pieces.some(p => p.id === item.piece.id)) lookImg = l.img;
+        });
+
+        return `
+          <div class="py-4 flex gap-4 items-center">
+            <div class="w-16 h-20 bg-neutral-100 rounded-lg overflow-hidden flex-shrink-0 relative border border-obverse-line">
+              <img src="${lookImg}" class="w-full h-full object-cover">
+            </div>
+            
+            <div class="flex-1 min-w-0 space-y-1">
+              <div class="font-bold text-xs uppercase truncate">${item.piece.name}</div>
+              <div class="font-mono text-[10px] text-obverse-mute">${item.piece.code} / ${item.color} / SIZE ${item.size}</div>
+              <div class="font-mono text-xs text-obverse-blue font-semibold">${formatPrice(item.piece.priceUSD)}</div>
+            </div>
+
+            <div class="flex flex-col items-end gap-2 font-mono text-xs">
+              <button onclick="removeBagItem(${index})" class="text-obverse-mute hover:text-black">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              </button>
+              <div class="flex items-center border border-obverse-line rounded">
+                <button onclick="changeBagQty(${index}, -1)" class="px-2 py-0.5 hover:bg-neutral-100">-</button>
+                <span class="px-2 py-0.5">${item.qty}</span>
+                <button onclick="changeBagQty(${index}, 1)" class="px-2 py-0.5 hover:bg-neutral-100">+</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('bag-subtotal-price').textContent = formatPrice(subtotalUSD);
+      document.getElementById('bag-total-price').textContent = formatPrice(subtotalUSD);
+
+      // Free shipping threshold over $500 USD
+      const thresholdUSD = 500;
+      const progress = Math.min((subtotalUSD / thresholdUSD) * 100, 100);
+      document.getElementById('shipping-bar-fill').style.width = `${progress}%`;
+      document.getElementById('shipping-progress-percent').textContent = `${Math.round(progress)}%`;
+      
+      const thresholdConverted = formatPrice(thresholdUSD);
+      document.getElementById('shipping-threshold-text').innerHTML = progress >= 100 ? 
+        `<span class="text-emerald-600 font-bold">QUALIFIED FOR FREE EXPRESS SHIPPING</span>` : 
+        `<span>EXPRESS SHIPPING THRESHOLD (${thresholdConverted})</span>`;
+    }
+
+    function changeBagQty(index, delta) {
+      shoppingBag[index].qty += delta;
+      if (shoppingBag[index].qty <= 0) {
+        shoppingBag.splice(index, 1);
+      }
+      updateBagUI();
+    }
+
+    function removeBagItem(index) {
+      shoppingBag.splice(index, 1);
+      updateBagUI();
+    }
+
+    function toggleBagDrawer(open) {
+      const drawer = document.getElementById('bag-drawer');
+      if (open) {
+        drawer.classList.remove('translate-x-full');
+        closeQuickView();
+        toggleSearchOverlay(false);
+        toggleIndexOverlay(false);
+      } else {
+        drawer.classList.add('translate-x-full');
+      }
+    }
+
+    function triggerFlyToBagAnimation(startEl) {
+      const bagBtn = document.getElementById('bag-btn');
+      const startRect = startEl.getBoundingClientRect();
+      const endRect = bagBtn.getBoundingClientRect();
+
+      const particle = document.createElement('div');
+      particle.className = 'fly-particle w-6 h-6 bg-obverse-blue';
+      particle.style.left = `${startRect.left + startRect.width / 2}px`;
+      particle.style.top = `${startRect.top + startRect.height / 2}px`;
+      document.body.appendChild(particle);
+
+      const animation = particle.animate([
+        { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+        { transform: `translate(${endRect.left - startRect.left}px, ${endRect.top - startRect.top}px) scale(0.2)`, opacity: 0.8 }
+      ], {
+        duration: 700,
+        easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)'
+      });
+
+      animation.onfinish = () => {
+        particle.remove();
+        bagBtn.animate([
+          { transform: 'scale(1)' },
+          { transform: 'scale(1.2)' },
+          { transform: 'scale(1)' }
+        ], { duration: 300 });
+      };
+    }
+
+    function triggerSimulatedCheckout() {
+      if (shoppingBag.length === 0) {
+        showToast('Your bag is empty.');
+        return;
+      }
+      showToast('Redirecting to Secure Techwear Checkout...');
+      setTimeout(() => {
+        shoppingBag = [];
+        updateBagUI();
+        toggleBagDrawer(false);
+        showToast('Order Confirmed #OB-' + Math.floor(100000 + Math.random() * 900000));
+      }, 1500);
+    }
+
+    /* ==========================================================================
+       8. HOLD-TO-ZOOM MAGNIFIER LENS
+       ========================================================================== */
+
+    function setupMagnifier() {
+      const lens = document.getElementById('magnifier-lens');
+
+      window.addEventListener('pointerdown', (e) => {
+        if (e.target.closest('.look-image')) {
+          holdTimer = setTimeout(() => {
+            isHoldingPointer = true;
+            lens.style.display = 'block';
+            updateLensPosition(e);
+            updateCursorText('HOLD TO ZOOM');
+          }, 220);
+        }
+      });
+
+      window.addEventListener('pointermove', (e) => {
+        cursorTarget.x = e.clientX;
+        cursorTarget.y = e.clientY;
+
+        if (isHoldingPointer) {
+          updateLensPosition(e);
+        }
+      });
+
+      window.addEventListener('pointerup', () => {
+        clearTimeout(holdTimer);
+        isHoldingPointer = false;
+        lens.style.display = 'none';
+        updateCursorText('DRAG');
+      });
+    }
+
+    function updateLensPosition(e) {
+      const lens = document.getElementById('magnifier-lens');
+      const activeImg = document.querySelectorAll('.slide-layer')[currentLookIndex].querySelector('.look-image');
+      
+      if (!activeImg) return;
+
+      const rect = activeImg.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const px = (x / rect.width) * 100;
+      const py = (y / rect.height) * 100;
+
+      lens.style.left = `${e.clientX}px`;
+      lens.style.top = `${e.clientY}px`;
+      lens.style.backgroundImage = `url('${activeImg.src}')`;
+      lens.style.backgroundSize = `${rect.width * 2.4}px ${rect.height * 2.4}px`;
+      lens.style.backgroundPosition = `${px}% ${py}%`;
+    }
+
+    /* ==========================================================================
+       9. ARCHIVE SEARCH & 5-COLUMN LOOK INDEX OVERLAYS
+       ========================================================================== */
+
+    function toggleSearchOverlay(open) {
+      const overlay = document.getElementById('search-overlay');
+      if (open) {
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        document.getElementById('archive-search-input').focus();
+        toggleBagDrawer(false);
+        closeQuickView();
+        toggleIndexOverlay(false);
+      } else {
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+      }
+    }
+
+    function renderSearchGrid(filterCat = 'ALL', query = '') {
+      const container = document.getElementById('search-results-grid');
+      let allPieces = [];
+
+      LOOKS_DATA.forEach(look => {
+        look.pieces.forEach(p => {
+          allPieces.push({ ...p, lookBrand: look.brand, lookImg: look.img, lookIndex: look.id - 1 });
+        });
+      });
+
+      let filtered = allPieces.filter(p => {
+        const matchesQuery = query === '' || 
+          p.name.toLowerCase().includes(query.toLowerCase()) || 
+          p.code.toLowerCase().includes(query.toLowerCase()) ||
+          p.desc.toLowerCase().includes(query.toLowerCase());
+
+        const matchesCat = filterCat === 'ALL' || 
+          p.category === filterCat || 
+          p.season === filterCat;
+
+        return matchesQuery && matchesCat;
+      });
+
+      container.innerHTML = filtered.map(item => `
+        <div onclick="openQuickView('${item.id}')" class="group bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden hover:border-white transition-all cursor-pointer p-3 space-y-3">
+          <div class="h-48 w-full bg-neutral-800 rounded-lg overflow-hidden relative">
+            <img src="${item.lookImg}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute top-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] font-mono px-2 py-0.5 rounded">${item.code}</div>
+          </div>
+          <div class="space-y-1">
+            <div class="font-mono text-[10px] text-neutral-400 uppercase">${item.lookBrand}</div>
+            <div class="font-bold text-sm uppercase text-white tracking-tight">${item.name}</div>
+            <div class="font-mono text-xs text-obverse-blue font-semibold">${formatPrice(item.priceUSD)}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function onSearchInput(val) {
+      renderSearchGrid('ALL', val);
+    }
+
+    function filterSearchCategory(cat) {
+      renderSearchGrid(cat, document.getElementById('archive-search-input').value);
+    }
+
+    function toggleIndexOverlay(open) {
+      const overlay = document.getElementById('index-overlay');
+      if (open) {
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        toggleBagDrawer(false);
+        closeQuickView();
+        toggleSearchOverlay(false);
+      } else {
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+      }
+    }
+
+    function renderIndexOverlay() {
+      const container = document.getElementById('index-columns-container');
+      container.innerHTML = LOOKS_DATA.map((look, index) => `
+        <div onclick="goToLook(${index}); toggleIndexOverlay(false);" class="group relative h-full min-h-[160px] md:min-h-full bg-neutral-900 overflow-hidden cursor-pointer flex flex-col justify-between p-6 transition-all duration-500 hover:flex-[1.5]">
+          <img src="${look.img}" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+          
+          <div class="relative z-10 flex justify-between items-start text-white font-mono text-xs">
+            <span>${look.code}</span>
+            <span>${look.season}</span>
+          </div>
+
+          <div class="relative z-10 space-y-2 text-white">
+            <h3 class="text-2xl md:text-3xl font-bold uppercase tracking-tight">${look.brand}</h3>
+            <div class="font-mono text-xs text-neutral-400 space-y-1">
+              ${look.pieces.map(p => `<div>• ${p.name}</div>`).join('')}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* ==========================================================================
+       10. FOCUS MODE & KEYBOARD SHORTCUTS
+       ========================================================================== */
+
+    function toggleFocusMode() {
+      isFocusMode = !isFocusMode;
+      document.body.classList.toggle('fs', isFocusMode);
+      document.getElementById('focus-btn-text').textContent = isFocusMode ? 'EXIT FOCUS [F]' : 'FOCUS [F]';
+    }
+
+    function setupEventListeners() {
+      // Keyboard Shortcuts
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextLook();
+        if (e.key === 'ArrowLeft') prevLook();
+        if (e.key === 'f' || e.key === 'F') toggleFocusMode();
+        if (e.key === 'Escape') {
+          toggleBagDrawer(false);
+          closeQuickView();
+          toggleSearchOverlay(false);
+          toggleIndexOverlay(false);
+        }
+      });
+
+      // Mouse Wheel Throttle Navigation
+      let wheelTimeout = null;
+      window.addEventListener('wheel', (e) => {
+        if (wheelTimeout) return;
+        if (Math.abs(e.deltaY) > 30) {
+          if (e.deltaY > 0) nextLook();
+          else prevLook();
+
+          wheelTimeout = setTimeout(() => {
+            wheelTimeout = null;
+          }, 800);
+        }
+      });
+
+      // Pointer Drag Gesture Setup
+      let startX = 0;
+      window.addEventListener('pointerdown', (e) => {
+        startX = e.clientX;
+      });
+
+      window.addEventListener('pointerup', (e) => {
+        const diffX = e.clientX - startX;
+        if (Math.abs(diffX) > 80) {
+          if (diffX < 0) nextLook();
+          else prevLook();
+        }
+      });
+
+      setupMagnifier();
+    }
+
+    /* ==========================================================================
+       11. CUSTOM CURSOR & TOAST SYSTEM
+       ========================================================================== */
+
+    function updateCursorText(text) {
+      document.getElementById('cursor-label').textContent = text;
+    }
+
+    function startCursorLoop() {
+      const cursor = document.getElementById('custom-cursor');
+
+      function loop() {
+        pointer.x += (cursorTarget.x - pointer.x) * 0.18;
+        pointer.y += (cursorTarget.y - pointer.y) * 0.18;
+
+        cursor.style.transform = `translate3d(${pointer.x}px, ${pointer.y}px, 0) translate(-50%, -50%)`;
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
+    }
+
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'bg-obverse-ink text-white font-mono text-xs px-4 py-3 rounded-lg shadow-2xl border border-neutral-700 flex items-center gap-3 animate-bounce';
+      toast.innerHTML = `
+        <span class="w-2 h-2 rounded-full bg-obverse-blue"></span>
+        <span>${message}</span>
+      `;
+
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
